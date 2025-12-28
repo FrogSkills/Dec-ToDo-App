@@ -8,11 +8,22 @@
 import SwiftUI
 
 struct DetailView: View {
+    var incomingWord: String
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Text("This is the DetailView")
+            .foregroundStyle(.black)
+        Text("The word of choice is \(incomingWord)")
+            .foregroundStyle(.black)
     }
 }
 
 #Preview {
-    DetailView()
+    DetailView(incomingWord: "")
 }
+
+
+// create a var (not @state & not private) that has its value declared.
+
+// DetailView(randomVarName: actualRandomValue)
+// place the declared var in the detail view and give it any random value.

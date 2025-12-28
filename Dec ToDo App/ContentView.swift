@@ -8,17 +8,36 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var subjects = ["Ues", "des"]
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationStack {
+            List {
+                ForEach(subjects, id: \.self) { subject in
+                    NavigationLink {
+                        DetailView(incomingWord: "EAT \(subject)")
+                            .foregroundStyle(.orange)
+                    } label: {
+                        Text("\(subject)")
+                    }
+                }
+            }
+            .navigationTitle("Sure")
         }
-        .padding()
     }
 }
 
 #Preview {
     ContentView()
 }
+
+
+//NavigationStack > List > NavigationLink
+
+// ForEach(randomArrayName, id: \.self) {randomArraySingular in
+//      NavigationLink {...rest of code
+
+// The .navigationTitle needs to be between the NavigationStack & NavigationLink
+// .navigationBarTitleDisplayMode(.-_-_-) right under.
+// .listStyle(.plain) right under.
+
