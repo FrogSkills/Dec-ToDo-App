@@ -6,12 +6,20 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct Dec_ToDo_AppApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .modelContainer(for: ToDoClass.self)
         }
     }
 }
+
+
+// import SwiftData
+
+
+// added .modelContainer(for: randomClassName.self)

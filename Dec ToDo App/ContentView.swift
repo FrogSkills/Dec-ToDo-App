@@ -10,13 +10,14 @@ import SwiftUI
 struct ContentView: View {
     @State private var subjects = ["Ues", "des"]
     @State private var sheetIsShowing = false
+    @Environment(\.modelContext) var modelContext
     
     var body: some View {
         NavigationStack {
             List {
                 ForEach(subjects, id: \.self) { subject in
                     NavigationLink {
-                        DetailView(incomingWord: "This is the incoming: \(subject)")
+                        DetailView(classHolderObject: ToDoClass(), incomingWord: subject)
                             .foregroundStyle(.orange)
                     } label: {
                         Text("\(subject)")
@@ -26,7 +27,7 @@ struct ContentView: View {
             .navigationTitle("Sure")
             .sheet(isPresented: $sheetIsShowing) {
                 NavigationStack {
-                    DetailView(incomingWord: "")
+                    DetailView(classHolderObject: ToDoClass(), incomingWord: "")
                 }
             }
             .toolbar {
@@ -72,3 +73,11 @@ struct ContentView: View {
 // There are no dismiss, cancel, or any buttons in the sheet. To show the ones we already have we need to embeed the DetailView(second window) (that is being called in the .sheet) in a NavigationStack.
 
 // instead of .sheet we can use .fullScreenCover
+
+
+// import SwiftData
+
+// every page/file that will use SwiftData will need a container and context
+
+// @Environment(\.modelContext) var modelContext
+

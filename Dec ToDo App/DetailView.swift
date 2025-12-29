@@ -8,12 +8,16 @@
 import SwiftUI
 
 struct DetailView: View {
+    @State var classHolderObject: ToDoClass
     @State var incomingWord: String
     @State private var reminderIsOn = false
     @State private var dueDate = Date.now+(24*60*60)
     @State private var notes = ""
     @State private var isCompleted = false
     @Environment(\.dismiss) private var dismiss
+    
+    @Environment(\.modelContext) var modelContext
+
     
     var body: some View {
         List{
@@ -41,6 +45,13 @@ struct DetailView: View {
                 .listRowSeparator(.hidden)
             
         }
+        .onAppear() {
+            incomingWord = incomingWord
+            reminderIsOn = reminderIsOn
+            dueDate = dueDate
+            notes = notes
+            isCompleted = isCompleted
+        }
         .listStyle(.plain)
         .navigationBarBackButtonHidden()
         .toolbar {
@@ -61,7 +72,8 @@ struct DetailView: View {
 
 #Preview {
     NavigationStack {
-        DetailView(incomingWord: "")
+        DetailView(classHolderObject: ToDoClass(), incomingWord: "")
+            .modelContainer(for: ToDoClass.self, inMemory: true)
     }
 }
 
@@ -93,3 +105,48 @@ struct DetailView: View {
 
 
 // .navigationBarBackButtonHidden
+
+
+// import SwiftData
+
+
+/*
+ at the end of the list we add the following, to show something when loaded.
+ .onAppear() {
+    incomingWord = incomingWord
+    reminderIsOn = reminderIsOn
+    dueDate = dueDate
+    notes = notes
+    isCompleted = isCompleted
+    }
+
+*/
+
+
+// @Environment(\.modelContext) var modelContext
+
+
+
+
+
+/* Created a new variable to hold an incoming class
+ @State var classHolderObject: ToDoClass
+ We also use the incoming class at the bottom in the preview;
+ 
+ 
+ #Preview {
+     NavigationStack {
+         DetailView(classHolderObject: ToDoClass(), incomingWord: "")
+     }
+ }
+ 
+ It is important we created the class with default values, so they show on the screen when loaded (.onAppear)
+ */
+
+
+
+// Add a modelContainer in the #Preview, below the DetailView.
+//              .modelContainer(for: ToDoClass.self, inMemory: true)
+
+
+// minute 14:55 Ch 5.5
