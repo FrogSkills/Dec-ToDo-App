@@ -17,18 +17,42 @@ struct ContentView: View {
         NavigationStack {
             List {
                 ForEach(subjects) { subject in
-                    NavigationLink {
-                        DetailView(classHolderObject: subject)
-                            .foregroundStyle(.orange)
-                    } label: {
-                        Text(subject.incomingWord)
-                    }
-                    .swipeActions {
-                        Button("Delete", role: .destructive) {
-                            modelContext.delete(subject)
-                            guard let _ = try? modelContext.save() else {
-                                print("Save after delet on ContentView did not work")
-                                return
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Image(systemName: subject.isCompleted ? "checkmark.rectangle" : "rectangle")
+                                .onTapGesture {
+                                    subject.isCompleted.toggle()
+                                    guard let _ = try? modelContext.save() else {
+                                        print("Toggle check box did not work.")
+                                        return
+                                    }
+                                }
+                            NavigationLink {
+                                DetailView(classHolderObject: subject)
+                                    .foregroundStyle(.orange)
+                            } label: {
+                                Text(subject.incomingWord)
+                            }
+                            .swipeActions {
+                                Button("Delete", role: .destructive) {
+                                    modelContext.delete(subject)
+                                    guard let _ = try? modelContext.save() else {
+                                        print("Save after delet on ContentView did not work")
+                                        return
+                                    }
+                                }
+                            }
+                        }
+//                        Image(systemName: "calendar")
+//                            .foregroundStyle(.red, .gray, .blue)
+                        
+                        HStack {
+                            Text(subject.dueDate.formatted(date: .abbreviated, time: .shortened))
+                                .foregroundStyle(.secondary)
+                            
+                            if subject.reminderIsOn {
+                                Image(systemName: "calendar.badge.clock")
+                                    .symbolRenderingMode(.multicolor)
                             }
                         }
                     }
@@ -55,7 +79,7 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: ToDoClass.self, inMemory: true)
+        .modelContainer(ToDoClass.preview)
 }
 
 
@@ -124,5 +148,42 @@ struct ContentView: View {
      }
  }
  
+ 
+ */
+
+
+// Add an HStack before te NavigataionLink. Right
+//      Image(systemName: subject.isCompleted ? "checkmark.rectangle" : "rectangle")
+//      .onTapGesture {
+//          subject.isCompleted.toggle()
+
+// But we need to save this change (any changes). So under the new toggle we add
+//  guard let _ = try? modelContext.save() else {
+//      print("Toggle check box did not work.")
+//      return
+
+
+
+
+
+// To work with the mock data from the model/class we change this .modelContainer in the preview to
+// .modelContainer(ToDoClass.preview)
+
+
+
+
+// we also add another VStack to the outside of the HStack to display sub info, then an HStack below the current HStack.
+
+/*
+ 
+ 
+ HStack {
+     Text(subject.dueDate.formatted(date: .abbreviated, time: .shortened))
+         .foregroundStyle(.secondary)
+     
+     if subject.reminderIsOn {
+         Image(systemName: "calendar.badge.clock")
+             .symbolRenderingMode(.multicolor)
+     }
  
  */
