@@ -9,7 +9,7 @@ import SwiftUI
 
 struct DetailView: View {
     @State var classHolderObject: ToDoClass
-    @State var incomingWord: String
+    @State var incomingWord = ""
     @State private var reminderIsOn = false
     @State private var dueDate = Date.now+(24*60*60)
     @State private var notes = ""
@@ -46,11 +46,11 @@ struct DetailView: View {
             
         }
         .onAppear() {
-            incomingWord = incomingWord
-            reminderIsOn = reminderIsOn
-            dueDate = dueDate
-            notes = notes
-            isCompleted = isCompleted
+            incomingWord = classHolderObject.incomingWord
+            reminderIsOn = classHolderObject.reminderIsOn
+            dueDate = classHolderObject.dueDate
+            notes = classHolderObject.notes
+            isCompleted = classHolderObject.isCompleted
         }
         .listStyle(.plain)
         .navigationBarBackButtonHidden()
@@ -63,7 +63,17 @@ struct DetailView: View {
             
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Save") {
-                    //TODO: Save code
+                    classHolderObject.incomingWord = incomingWord
+                    classHolderObject.reminderIsOn = reminderIsOn
+                    classHolderObject.dueDate = dueDate
+                    classHolderObject.notes = notes
+                    classHolderObject.isCompleted = isCompleted
+                    modelContext.insert(classHolderObject)
+                    guard let _ = try? modelContext.save() else {
+                        print("Save on DetailView did not work")
+                        return
+                    }
+                    dismiss()
                 }
             }
         }
@@ -72,7 +82,7 @@ struct DetailView: View {
 
 #Preview {
     NavigationStack {
-        DetailView(classHolderObject: ToDoClass(), incomingWord: "")
+        DetailView(classHolderObject: ToDoClass())
             .modelContainer(for: ToDoClass.self, inMemory: true)
     }
 }
@@ -113,11 +123,11 @@ struct DetailView: View {
 /*
  at the end of the list we add the following, to show something when loaded.
  .onAppear() {
-    incomingWord = incomingWord
-    reminderIsOn = reminderIsOn
-    dueDate = dueDate
-    notes = notes
-    isCompleted = isCompleted
+ incomingWord = classHolderObject.incomingWord
+ reminderIsOn = classHolderObject.reminderIsOn
+ dueDate = classHolderObject.dueDate
+ notes = classHolderObject.notes
+ isCompleted = classHolderObject.isCompleted
     }
 
 */
@@ -131,6 +141,7 @@ struct DetailView: View {
 
 /* Created a new variable to hold an incoming class
  @State var classHolderObject: ToDoClass
+ We feed it the Model/class we created, not an instance.
  We also use the incoming class at the bottom in the preview;
  
  
@@ -149,4 +160,18 @@ struct DetailView: View {
 //              .modelContainer(for: ToDoClass.self, inMemory: true)
 
 
-// minute 14:55 Ch 5.5
+// In the "Save" button we created, add the following code
+/*
+ classHolderObject.incomingWord = incomingWord
+ classHolderObject.reminderIsOn = reminderIsOn
+ classHolderObject.dueDate = dueDate
+ classHolderObject.notes = notes
+ classHolderObject.isCompleted = isCompleted
+ modelContext.insert(classHolderObject)
+ guard let _ = try? modelContext.save() else {
+     print("Save on DetailView did not work")
+     return
+ dismiss()
+ 
+ we add the dismiss code because we want to dismiss the page when "Save" is clicked
+ */

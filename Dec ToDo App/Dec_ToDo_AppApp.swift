@@ -16,6 +16,9 @@ struct Dec_ToDo_AppApp: App {
                 .modelContainer(for: ToDoClass.self)
         }
     }
+    init() {
+        print(URL.applicationSupportDirectory.path(percentEncoded: false))
+    }
 }
 
 
@@ -23,3 +26,15 @@ struct Dec_ToDo_AppApp: App {
 
 
 // added .modelContainer(for: randomClassName.self)
+
+
+/*
+ 
+ init() {
+     print(URL.applicationSupportDirectory.path(percentEncoded: false))
+ }
+ 
+ add that just above the last }
+ 
+ 
+ */

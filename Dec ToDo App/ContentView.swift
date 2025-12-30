@@ -6,28 +6,38 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
-    @State private var subjects = ["Ues", "des"]
+    @Query var subjects: [ToDoClass]
     @State private var sheetIsShowing = false
     @Environment(\.modelContext) var modelContext
     
     var body: some View {
         NavigationStack {
             List {
-                ForEach(subjects, id: \.self) { subject in
+                ForEach(subjects) { subject in
                     NavigationLink {
-                        DetailView(classHolderObject: ToDoClass(), incomingWord: subject)
+                        DetailView(classHolderObject: subject)
                             .foregroundStyle(.orange)
                     } label: {
-                        Text("\(subject)")
+                        Text(subject.incomingWord)
+                    }
+                    .swipeActions {
+                        Button("Delete", role: .destructive) {
+                            modelContext.delete(subject)
+                            guard let _ = try? modelContext.save() else {
+                                print("Save after delet on ContentView did not work")
+                                return
+                            }
+                        }
                     }
                 }
             }
             .navigationTitle("Sure")
             .sheet(isPresented: $sheetIsShowing) {
                 NavigationStack {
-                    DetailView(classHolderObject: ToDoClass(), incomingWord: "")
+                    DetailView(classHolderObject: ToDoClass())
                 }
             }
             .toolbar {
@@ -45,6 +55,7 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+        .modelContainer(for: ToDoClass.self, inMemory: true)
 }
 
 
@@ -81,3 +92,37 @@ struct ContentView: View {
 
 // @Environment(\.modelContext) var modelContext
 
+
+// .modelContainer(for: ToDoClass.self, inMemory: true)  in the #Preview
+
+
+//     @Query var toDos: [ToDoClass]
+// DO that instead of the array we had.
+// @Query fetches data from SwiftData's ModelContainer, so they can be dispalyed in SwiftUI Views.
+// @Query varibales will also trigger View updates on every change data(similar to how @State works). If you are swift experienced, SwiftData classes are automatically Observable & Identifiable. You don't add anything else to get this.
+
+// Now we can get rid of the id: \.self since SwiftData creates a unique identifiable.
+
+
+// The variable name (in this case, subject) of that Query is now used in the following way:
+//   ForEach(subjects) { subject in
+//    NavigationLink {
+//      DetailView(classHolderObject: subject)
+
+
+
+/*
+ 
+ 
+ .swipeActions {
+     Button("Delete", role: .destructive) {
+         modelContext.delete(subject)
+            guard let _ = try? modelContext.save() else {
+                print("Save after delet on ContentView did not work")
+                return
+            }
+     }
+ }
+ 
+ 
+ */
