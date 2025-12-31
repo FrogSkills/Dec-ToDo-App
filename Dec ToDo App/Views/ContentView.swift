@@ -8,9 +8,22 @@
 import SwiftUI
 import SwiftData
 
+
+enum SortOptions: String, CaseIterable {
+    case asEntered = "As Entered"
+    case alphabetical = "A-Z"
+    case chronological = "Date"
+    case completed = "Not Done"
+}
+
 struct ContentView: View {
     @Query var subjects: [ToDoClass]
     @State private var sheetIsShowing = false
+    @State private var sortSelection: SortOptions = .asEntered
+    @State private var alphabetical: SortOptions = .alphabetical
+    @State private var chronological: SortOptions = .chronological
+    @State private var completed: SortOptions = .completed
+
     @Environment(\.modelContext) var modelContext
     
     var body: some View {
@@ -71,6 +84,14 @@ struct ContentView: View {
                     } label: {
                         Image(systemName: "plus")
                     }
+                }
+                ToolbarItem(placement: .bottomBar) {
+                    Picker("", selection: $sortSelection) {
+                        ForEach(SortOptions.allCases, id: \.self) { sortOrder in
+                            Text(sortOrder.rawValue)
+                        }
+                    }
+                    .pickerStyle(.segmented)
                 }
             }
         }
@@ -185,5 +206,20 @@ struct ContentView: View {
          Image(systemName: "calendar.badge.clock")
              .symbolRenderingMode(.multicolor)
      }
+ 
+ */
+
+
+/*
+ 
+ To have the toolbar at the the bottom with the 4 probabilites:
+ 
+ ToolbarItem(placement: .bottomBar) {
+     Picker("", selection: $sortSelection) {
+         ForEach(SortOptions.allCases, id: \.self) { sortOrder in
+             Text(sortOrder.rawValue)
+         }
+     }
+     .pickerStyle(.segmented)
  
  */
